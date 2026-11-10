@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pawhaven – Pet care appointments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F1F6F5; --surface:#FFFFFF; --ink:#12302F; --muted:#56706E; --line:#D5E3E1;
+  --brand:#0F4C4A; --brand-ink:#FFFFFF; --sun:#FFC93C; --sun-ink:#3A2A00; --sky:#DDEFF0; --danger:#B3261E;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C1B1B; --surface:#132827; --ink:#E6F2F0; --muted:#9BB5B2; --line:#25403E;
+  --brand:#5FD0C4; --brand-ink:#052321; --sky:#17393A; --danger:#FF8A80; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0C1B1B; --surface:#132827; --ink:#E6F2F0; --muted:#9BB5B2; --line:#25403E;
+  --brand:#5FD0C4; --brand-ink:#052321; --sky:#17393A; --danger:#FF8A80; color-scheme:dark;}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.55 var(--body)}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header.top{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.logo{font:800 1.4rem var(--display);display:flex;align-items:center;gap:8px}
+.logo span{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--sun);font-size:1.1rem}
+.nav{display:flex;gap:8px;align-items:center}
+.btn{border:0;border-radius:999px;padding:11px 20px;font-weight:700;cursor:pointer;background:var(--brand);color:var(--brand-ink)}
+.btn:hover{filter:brightness(1.1)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.hero{display:grid;grid-template-columns:1fr 1.1fr;gap:40px;align-items:start;padding:28px 0 56px}
+.hero h1{font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;letter-spacing:-.02em}
+.hero p.lead{color:var(--muted);font-size:1.15rem;max-width:44ch;margin:18px 0 24px}
+.facts{display:flex;flex-wrap:wrap;gap:10px;padding:0;margin:0;list-style:none}
+.facts li{background:var(--sky);border-radius:999px;padding:8px 14px;font-weight:500;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:26px;box-shadow:0 18px 50px -24px rgba(15,76,74,.35)}
+.steps{display:flex;gap:6px;margin-bottom:20px}
+.steps i{flex:1;height:6px;border-radius:6px;background:var(--line)}
+.steps i.on{background:var(--brand)}
+.card h2{font-size:1.5rem;margin-bottom:4px}
+.card .sub{color:var(--muted);margin:0 0 18px}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.opt{text-align:left;background:var(--bg);border:2px solid transparent;border-radius:18px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.opt:hover{border-color:var(--line)}
+.opt[aria-pressed="true"]{border-color:var(--brand);background:var(--sky)}
+.opt b{font-size:1rem}.opt small{color:var(--muted)}
+.opt .em{font-size:1.6rem}
+label{display:block;font-weight:700;margin:14px 0 6px;font-size:.92rem}
+input[type=text],input[type=date],select{width:100%;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.slot{padding:10px 0;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);cursor:pointer;font-weight:500}
+.slot[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.slot[disabled]{opacity:.35;text-decoration:line-through;cursor:not-allowed}
+.err{color:var(--danger);font-size:.9rem;min-height:1.3em;margin:10px 0 0}
+.actions{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.summary{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.summary li{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:14px;background:var(--bg)}
+.summary span{color:var(--muted)}
+.done{text-align:center;padding:10px 0}
+.done .big{font-size:3rem}
+section.list{padding:12px 0 64px}
+.list-head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.list-head h2{font-size:2rem}
+.appts{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.appt{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:6px}
+.appt .when{font:800 1.15rem var(--display)}
+.appt .tag{align-self:flex-start;background:var(--sun);color:var(--sun-ink);border-radius:999px;padding:3px 12px;font-size:.82rem;font-weight:700}
+.appt .meta{color:var(--muted);font-size:.93rem}
+.appt button{align-self:flex-start;margin-top:8px;background:none;border:0;color:var(--danger);font-weight:700;cursor:pointer;padding:4px 0}
+.empty{grid-column:1/-1;border:2px dashed var(--line);border-radius:22px;padding:34px;text-align:center;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:999px;font-weight:700;opacity:0;pointer-events:none;transition:.25s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+footer{border-top:1px solid var(--line);padding:22px 0 30px;color:var(--muted);font-size:.9rem}
+@media (max-width:860px){.hero{grid-template-columns:1fr}}
+@media (max-width:420px){.opts,.row{grid-template-columns:1fr}.slots{grid-template-columns:repeat(3,1fr)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="logo"><span aria-hidden="true">🐾</span>Pawhaven</div>
+    <div class="nav">
+      <button class="btn ghost" id="themeBtn" type="button" aria-label="Switch light or dark theme">Theme</button>
+      <a class="btn" href="#appointments" style="text-decoration:none">My appointments</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <h1>Book your pet’s next visit in under a minute.</h1>
+        <p class="lead">Pick a service, tell us about your pet, and choose a time. We’ll hold the slot and remind you before you arrive.</p>
+        <ul class="facts">
+          <li>Open Mon–Sat, 9 am–5 pm</li>
+          <li>Dogs, cats, rabbits and birds</li>
+          <li>Free cancellation until the day before</li>
+        </ul>
+      </div>
+
+      <div class="card" id="booking" aria-live="polite"></div>
+    </div>
+
+    <section class="list" id="appointments">
+      <div class="list-head">
+        <h2>Your appointments</h2>
+        <span id="count" class="sub" style="color:var(--muted)"></span>
+      </div>
+      <div class="appts" id="appts"></div>
+    </section>
+  </main>
+
+  <footer>Pawhaven Pet Care · 24 Orchard Lane · Questions? Call 555-0142</footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const SERVICES=[
+  {id:"checkup",name:"Wellness check-up",time:"30 min",price:45,em:"🩺"},
+  {id:"vaccine",name:"Vaccinations",time:"20 min",price:35,em:"💉"},
+  {id:"groom",name:"Grooming",time:"60 min",price:60,em:"🛁"},
+  {id:"dental",name:"Dental cleaning",time:"45 min",price:80,em:"🦷"}
+];
+const TIMES=["09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","16:00"];
+const SPECIES=["Dog","Cat","Rabbit","Bird"];
+
+let appts=[];
+try{appts=JSON.parse(localStorage.getItem("pawhaven-appts")||"[]")}catch(e){appts=[]}
+if(!Array.isArray(appts))appts=[];
+const save=()=>{try{localStorage.setItem("pawhaven-appts",JSON.stringify(appts))}catch(e){}};
+
+let step=1, draft={service:null,petName:"",species:"Dog",owner:"",date:"",time:"",error:""};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function todayISO(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)}
+function fmtDate(iso){const [y,m,d]=iso.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})}
+function taken(date,time){return appts.some(a=>a.date===date&&a.time===time)}
+function isSunday(iso){const [y,m,d]=iso.split("-").map(Number);return new Date(y,m-1,d).getDay()===0}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2400)}
+
+function bar(n){return '<div class="steps" aria-hidden="true">'+[1,2,3,4].map(i=>'<i class="'+(i<=n?"on":"")+'"></i>').join("")+"</div>"}
+
+function render(){
+  const el=$("#booking");
+  let h="";
+  if(step===1){
+    h=bar(1)+'<h2>Choose a service</h2><p class="sub">What does your pet need?</p><div class="opts">'+
+      SERVICES.map(s=>'<button type="button" class="opt" data-svc="'+s.id+'" aria-pressed="'+(draft.service===s.id)+'"><span class="em">'+s.em+'</span><b>'+s.name+'</b><small>'+s.time+' · $'+s.price+'</small></button>').join("")+
+      '</div><p class="err">'+esc(draft.error)+'</p><div class="actions"><span></span><button class="btn" id="next" type="button">Continue</button></div>';
+  }else if(step===2){
+    h=bar(2)+'<h2>About your pet</h2><p class="sub">So the vet knows who’s coming.</p>'+
+      '<label for="pet">Pet’s name</label><input type="text" id="pet" value="'+esc(draft.petName)+'" autocomplete="off">'+
+      '<div class="row"><div><label for="sp">Type of pet</label><select id="sp">'+SPECIES.map(s=>'<option'+(s===draft.species?" selected":"")+'>'+s+'</option>').join("")+'</select></div>'+
+      '<div><label for="own">Your name</label><input type="text" id="own" value="'+esc(draft.owner)+'" autocomplete="name"></div></div>'+
+      '<p class="err">'+esc(draft.error)+'</p><div class="actions"><button class="btn ghost" id="back" type="button">Back</button><button class="btn" id="next" type="button">Continue</button></div>';
+  }else if(step===3){
+    h=bar(3)+'<h2>Pick a date and time</h2><p class="sub">Closed on Sundays. Greyed-out times are booked.</p>'+
+      '<label for="dt">Date</label><input type="date" id="dt" min="'+todayISO()+'" value="'+draft.date+'">'+
+      '<label>Time</label><div class="slots">'+TIMES.map(t=>'<button type="button" class="slot" data-time="'+t+'" aria-pressed="'+(draft.time===t)+'"'+(!draft.date||taken(draft.date,t)?" disabled":"")+'>'+t+'</button>').join("")+'</div>'+
+      '<p class="err">'+esc(draft.error)+'</p><div class="actions"><button class="btn ghost" id="back" type="button">Back</button><button class="btn" id="next" type="button">Review booking</button></div>';
+  }else if(step===4){
+    const s=SERVICES.find(x=>x.id===draft.service);
+    h=bar(4)+'<h2>Review and confirm</h2><p class="sub">Check the details, then confirm.</p><ul class="summary">'+
+      '<li><span>Service</span><b>'+s.name+'</b></li>'+
+      '<li><span>Pet</span><b>'+esc(draft.petName)+' ('+draft.species.toLowerCase()+')</b></li>'+
+      '<li><span>Owner</span><b>'+esc(draft.owner)+'</b></li>'+
+      '<li><span>When</span><b>'+fmtDate(draft.date)+', '+draft.time+'</b></li>'+
+      '<li><span>Estimated cost</span><b>$'+s.price+'</b></li></ul>'+
+      '<div class="actions"><button class="btn ghost" id="back" type="button">Back</button><button class="btn" id="confirm" type="button">Confirm booking</button></div>';
+  }else{
+    h='<div class="done"><div class="big" aria-hidden="true">🎉</div><h2>You’re booked!</h2><p class="sub">We’ve saved your appointment. You can cancel it below.</p><div class="actions" style="justify-content:center"><button class="btn" id="again" type="button">Book another visit</button></div></div>';
+  }
+  el.innerHTML=h;
+  bind();
+}
+
+function bind(){
+  document.querySelectorAll("[data-svc]").forEach(b=>b.onclick=()=>{draft.service=b.dataset.svc;draft.error="";render()});
+  document.querySelectorAll("[data-time]").forEach(b=>b.onclick=()=>{draft.time=b.dataset.time;draft.error="";render()});
+  const dt=$("#dt");
+  if(dt)dt.onchange=()=>{
+    if(dt.value&&isSunday(dt.value)){draft.date="";draft.time="";draft.error="We’re closed on Sundays. Choose Monday to Saturday.";render();return}
+    draft.date=dt.value;draft.time="";draft.error="";render();
+  };
+  const back=$("#back");if(back)back.onclick=()=>{if(step===2){draft.petName=$("#pet").value;draft.owner=$("#own").value;draft.species=$("#sp").value}draft.error="";step--;render()};
+  const next=$("#next");
+  if(next)next.onclick=()=>{
+    if(step===1){if(!draft.service){draft.error="Choose a service to continue.";return render()}}
+    if(step===2){
+      draft.petName=$("#pet").value.trim();draft.owner=$("#own").value.trim();draft.species=$("#sp").value;
+      if(!draft.petName||!draft.owner){draft.error="Enter your pet’s name and your name.";return render()}
+    }
+    if(step===3){
+      if(!draft.date){draft.error="Select a date.";return render()}
+      if(!draft.time){draft.error="Select a time.";return render()}
+    }
+    draft.error="";step++;render();
+  };
+  const c=$("#confirm");
+  if(c)c.onclick=()=>{
+    if(taken(draft.date,draft.time)){draft.error="That time was just booked. Pick another.";step=3;return render()}
+    appts.push({id:Date.now(),service:draft.service,petName:draft.petName,species:draft.species,owner:draft.owner,date:draft.date,time:draft.time});
+    appts.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+    save();step=5;render();renderList();toast("Appointment booked");
+  };
+  const again=$("#again");
+  if(again)again.onclick=()=>{draft={service:null,petName:"",species:"Dog",owner:"",date:"",time:"",error:""};step=1;render()};
+}
+
+function renderList(){
+  const box=$("#appts");
+  $("#count").textContent=appts.length?appts.length+(appts.length===1?" upcoming visit":" upcoming visits"):"";
+  if(!appts.length){box.innerHTML='<div class="empty">No appointments yet. Book your first visit above.</div>';return}
+  box.innerHTML=appts.map(a=>{
+    const s=SERVICES.find(x=>x.id===a.service)||{name:a.service,em:"🐾"};
+    return '<article class="appt"><span class="tag">'+s.em+' '+s.name+'</span><div class="when">'+fmtDate(a.date)+', '+a.time+'</div>'+
+      '<div class="meta">'+esc(a.petName)+' the '+esc(a.species.toLowerCase())+' · booked by '+esc(a.owner)+'</div>'+
+      '<button type="button" data-cancel="'+a.id+'" aria-label="Cancel appointment for '+esc(a.petName)+'">Cancel appointment</button></article>';
+  }).join("");
+  box.querySelectorAll("[data-cancel]").forEach(b=>b.onclick=()=>{
+    appts=appts.filter(a=>String(a.id)!==b.dataset.cancel);save();renderList();toast("Appointment canceled");
+  });
+}
+
+$("#themeBtn").onclick=()=>{
+  const r=document.documentElement;
+  const dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;
+  r.dataset.theme=dark?"light":"dark";
+};
+
+render();renderList();
+</script>
+</body>
+</html>
